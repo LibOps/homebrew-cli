@@ -9,7 +9,7 @@ First, you must install Google Cloud's CLI [gcloud](https://cloud.google.com/sdk
 ### Homebrew
 You can install the LibOps CLI using homebew
 ```
-brew tap libops/libops
+brew tap libops/cli
 brew install libops
 ```
 
