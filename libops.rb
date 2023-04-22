@@ -5,20 +5,20 @@
 class Libops < Formula
   desc ""
   homepage "https://github.com/libops/homebrew-cli"
-  version "0.0.1"
+  version "0.0.2"
 
   on_macos do
-    if Hardware::CPU.intel?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.0.1/homebrew-cli_Darwin_x86_64.tar.gz"
-      sha256 "a9691c8a62a30f108ffd10ae1314fffb106e22c6815d4513a15b725d7b708576"
+    if Hardware::CPU.arm?
+      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.0.2/homebrew-cli_Darwin_arm64.tar.gz"
+      sha256 "127660d95125b6c36fc8e87b9d21c9a0f43a659376de11ce045817ff1629ba79"
 
       def install
         bin.install "libops"
       end
     end
-    if Hardware::CPU.arm?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.0.1/homebrew-cli_Darwin_arm64.tar.gz"
-      sha256 "1e29982cfa692296ea6c66764465bf221b90287b859b138009448cbf8a6979c9"
+    if Hardware::CPU.intel?
+      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.0.2/homebrew-cli_Darwin_x86_64.tar.gz"
+      sha256 "cea11e3072a93ef9ac94da13ddde19967488d6c15b9059d32f9f9aa2210d2251"
 
       def install
         bin.install "libops"
@@ -28,16 +28,16 @@ class Libops < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.0.1/homebrew-cli_Linux_arm64.tar.gz"
-      sha256 "6b1f615a0f575f3f7390b7872e08c0b79ea869a4e1b549488e30f6785c5ef0af"
+      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.0.2/homebrew-cli_Linux_arm64.tar.gz"
+      sha256 "21b7ae21011a35fa0e2a87a8896570595fc7558398893cb72657e3eab9ce726f"
 
       def install
         bin.install "libops"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.0.1/homebrew-cli_Linux_x86_64.tar.gz"
-      sha256 "e029dce90dfeda050d3b0a18f5ce974886283d3f6ae0d176f759a216f8456506"
+      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.0.2/homebrew-cli_Linux_x86_64.tar.gz"
+      sha256 "d47fc66fa2fb86a1eb7cf1a5ebbbea85082e5244653b3fc37e7e19300218be2a"
 
       def install
         bin.install "libops"
