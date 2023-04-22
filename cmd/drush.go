@@ -4,11 +4,7 @@ Copyright © 2023 Joe Corall <joe@libops.io>
 package cmd
 
 import (
-	"bytes"
-	"fmt"
-	"io"
 	"log"
-	"net/http"
 	"strings"
 
 	"github.com/libops/cli/pkg/gcloud"
@@ -54,34 +50,7 @@ var drushCmd = &cobra.Command{
 
 		// run the drush command
 		drushCmd := strings.Join(args, " ")
-		fmt.Printf("Running `drush %s` on %s %s\n", drushCmd, site, env)
-		url := fmt.Sprintf("https://%s.remote.%s.libops.site/drush", env, site)
-		req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(drushCmd)))
-		if err != nil {
-			fmt.Println("Error creating request:", err)
-			return
-		}
-		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
-		resp, err := http.DefaultClient.Do(req)
-		if err != nil {
-			fmt.Println("Error running request:", err)
-			return
-		}
-		defer resp.Body.Close()
-
-		// print the output to the terminal as it streams in
-		for {
-			buffer := make([]byte, 1024)
-			n, err := resp.Body.Read(buffer)
-			if err != nil && err != io.EOF {
-				panic(err)
-			}
-			if n == 0 {
-				break
-			}
-			fmt.Print(string(buffer[:n]))
-		}
-
+		libops.IssueCommand(site, env, "drush", drushCmd, token)
 	},
 }
 

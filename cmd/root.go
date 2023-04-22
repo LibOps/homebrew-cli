@@ -35,6 +35,6 @@ func init() {
 		log.Println(err)
 	}
 
-	rootCmd.PersistentFlags().StringP("site", "s", filepath.Base(path), "LibOps site")
+	rootCmd.PersistentFlags().StringP("site", "p", filepath.Base(path), "LibOps project/site")
 	rootCmd.PersistentFlags().StringP("environment", "e", "development", "LibOps environment")
 }
