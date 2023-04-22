@@ -15,7 +15,7 @@ brew install libops
 
 ### Download Binary
 
-Instead of homebrew, you can download a binary for your system from [the latest release](https://github.com/LibOps/cli/releases/latest)
+Instead of homebrew, you can download a binary for your system from [the latest release](https://github.com/LibOps/homebrew-cli/releases/latest)
 
 Then put the binary in a directory that is in your `$PATH`
 
