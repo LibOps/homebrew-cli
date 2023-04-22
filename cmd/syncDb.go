@@ -18,11 +18,13 @@ import (
 var syncDbCmd = &cobra.Command{
 	Use:   "sync-db",
 	Short: "Transfer the database from one environment to another",
-	Long: `Transfer the database from one environment to another
+	Long: `
+Info:
+	Transfer the database from one environment to another
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+    Example sync the production database into development:
+      libops sync-db --site libops-abcdef01 --source production --target development
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var err error
 

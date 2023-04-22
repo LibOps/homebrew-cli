@@ -17,7 +17,8 @@ var drushCmd = &cobra.Command{
 	Use:   "drush",
 	Short: "Run drush commands on your libops environment",
 	Long: `
-    Run drush commands on your libops environment.
+Info:
+	Run drush commands on your libops environment.
 
     Currently only non-interactive drush commands are supported.
 
