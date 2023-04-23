@@ -2,6 +2,7 @@ package gcloud
 
 import (
 	"bytes"
+	"log"
 	"os/exec"
 	"strings"
 )
@@ -20,6 +21,7 @@ func AccessToken() (string, error) {
 		return "", err
 	}
 
+	log.Println("Generated gcloud identity token")
 	token := stdout.String()
 	return strings.TrimSpace(token), nil
 }
