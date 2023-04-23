@@ -42,18 +42,37 @@ Info:
 			return
 		}
 
-		err = libops.PingEnvironment(site, source)
+		sourceToken, err := cmd.Flags().GetString("source-token")
+		if err != nil {
+			return
+		}
+		targetToken, err := cmd.Flags().GetString("target-token")
+		if err != nil {
+			return
+		}
+
+		// if a source or target token weren't passed into the command
+		// generate one
+		if sourceToken == "" || targetToken == "" {
+			// get the gcloud id token
+			token, err := gcloud.AccessToken()
+			if err != nil {
+				log.Fatal(err)
+			}
+			if sourceToken == "" {
+				sourceToken = token
+			}
+			if targetToken == "" {
+				targetToken = token
+			}
+		}
+
+		err = libops.IssueCommand(site, source, "wakeup", "", sourceToken)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		err = libops.PingEnvironment(site, target)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// get the gcloud id token
-		token, err := gcloud.AccessToken()
+		err = libops.IssueCommand(site, target, "wakeup", "", targetToken)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -66,7 +85,10 @@ Info:
 			"--debug",
 		}
 		drushCmd := strings.Join(exportArgs, " ")
-		libops.IssueCommand(site, source, "drush", drushCmd, token)
+		err = libops.IssueCommand(site, source, "drush", drushCmd, sourceToken)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		rand := rand.Int()
 		fileName := fmt.Sprintf("dump-%s-%d.sql", source, rand)
@@ -78,7 +100,10 @@ Info:
 		}
 		gsutilCmd := strings.Join(uploadArgs, " ")
 
-		libops.IssueCommand(site, source, "gsutil", gsutilCmd, token)
+		err = libops.IssueCommand(site, source, "gsutil", gsutilCmd, sourceToken)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		downloadArgs := []string{
 			"cp",
@@ -86,7 +111,10 @@ Info:
 			"/tmp/",
 		}
 		gsutilCmd = strings.Join(downloadArgs, " ")
-		libops.IssueCommand(site, target, "gsutil", gsutilCmd, token)
+		err = libops.IssueCommand(site, target, "gsutil", gsutilCmd, targetToken)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		importArgs := []string{
 			"sql-query",
@@ -96,7 +124,10 @@ Info:
 			"--debug",
 		}
 		drushCmd = strings.Join(importArgs, " ")
-		libops.IssueCommand(site, target, "drush", drushCmd, token)
+		err = libops.IssueCommand(site, target, "drush", drushCmd, targetToken)
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
@@ -105,6 +136,9 @@ func init() {
 
 	syncDbCmd.Flags().StringP("source", "s", "", "The database that will be exported from")
 	syncDbCmd.Flags().StringP("target", "t", "", "The database that will be overwritten")
+	syncDbCmd.Flags().StringP("source-token", "x", "", "(optional/machines-only) The gcloud identity token to access source Cloud Run")
+	syncDbCmd.Flags().StringP("target-token", "y", "", "(optional/machines-only) The gcloud identity token to access target Cloud Run")
+
 	syncDbCmd.MarkFlagRequired("source")
 	syncDbCmd.MarkFlagRequired("target")
 }

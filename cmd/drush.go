@@ -38,20 +38,23 @@ Info:
 			log.Fatal(err)
 		}
 
-		err = libops.PingEnvironment(site, env)
-		if err != nil {
-			log.Fatal(err)
-		}
-
 		// get the gcloud id token
 		token, err := gcloud.AccessToken()
 		if err != nil {
 			log.Fatal(err)
 		}
 
+		err = libops.IssueCommand(site, env, "wakeup", "", token)
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		// run the drush command
 		drushCmd := strings.Join(args, " ")
-		libops.IssueCommand(site, env, "drush", drushCmd, token)
+		err = libops.IssueCommand(site, env, "drush", drushCmd, token)
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
