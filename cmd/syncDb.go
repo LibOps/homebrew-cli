@@ -9,7 +9,6 @@ import (
 	"math/rand"
 	"strings"
 
-	"github.com/libops/cli/pkg/gcloud"
 	"github.com/libops/cli/pkg/libops"
 	"github.com/spf13/cobra"
 )
@@ -42,46 +41,20 @@ Info:
 			return
 		}
 
-		sourceToken, err := cmd.Flags().GetString("source-token")
+		sourceToken, err := libops.GetToken(cmd, "source-token")
 		if err != nil {
 			return
 		}
-		targetToken, err := cmd.Flags().GetString("target-token")
+		targetToken, err := libops.GetToken(cmd, "target-token")
 		if err != nil {
 			return
-		}
-
-		// if a source or target token weren't passed into the command
-		// generate one
-		if sourceToken == "" || targetToken == "" {
-			// get the gcloud id token
-			token, err := gcloud.AccessToken()
-			if err != nil {
-				log.Fatal(err)
-			}
-			if sourceToken == "" {
-				sourceToken = token
-			}
-			if targetToken == "" {
-				targetToken = token
-			}
-		}
-
-		err = libops.IssueCommand(site, source, "wakeup", "", sourceToken)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = libops.IssueCommand(site, target, "wakeup", "", targetToken)
-		if err != nil {
-			log.Fatal(err)
 		}
 
 		// run the drush command
 		exportArgs := []string{
 			"sql-dump",
 			"-y",
-			"--result-file=/tmp/dump.sql",
+			"--result-file=/tmp/drupal.sql",
 			"--debug",
 		}
 		drushCmd := strings.Join(exportArgs, " ")
@@ -91,11 +64,11 @@ Info:
 		}
 
 		rand := rand.Int()
-		fileName := fmt.Sprintf("dump-%s-%d.sql", source, rand)
+		fileName := fmt.Sprintf("drupal-%s-%d.sql", source, rand)
 		gcsObject := fmt.Sprintf("gs://%s-backups/%s", site, fileName)
 		uploadArgs := []string{
 			"cp",
-			"/tmp/dump.sql",
+			"/tmp/drupal.sql",
 			gcsObject,
 		}
 		gsutilCmd := strings.Join(uploadArgs, " ")
@@ -136,8 +109,8 @@ func init() {
 
 	syncDbCmd.Flags().StringP("source", "s", "", "The database that will be exported from")
 	syncDbCmd.Flags().StringP("target", "t", "", "The database that will be overwritten")
-	syncDbCmd.Flags().StringP("source-token", "x", "", "(optional/machines-only) The gcloud identity token to access source Cloud Run")
-	syncDbCmd.Flags().StringP("target-token", "y", "", "(optional/machines-only) The gcloud identity token to access target Cloud Run")
+	syncDbCmd.Flags().StringP("source-token", "x", "", "(optional/machines-only) The gcloud identity token to access the LibOps environment passed as `source`")
+	syncDbCmd.Flags().StringP("target-token", "y", "", "(optional/machines-only) The gcloud identity token to access the LibOps environmen passed as `target`")
 
 	syncDbCmd.MarkFlagRequired("source")
 	syncDbCmd.MarkFlagRequired("target")

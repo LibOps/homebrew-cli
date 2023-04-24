@@ -26,30 +26,24 @@ After installation, the utility must be ran from within the locally checked out 
 ```
 $ git clone git@github.com:libops/your-site-repo
 $ cd your-site-repo
-$ libops drush -- status
+$  libops --help                       
+Interact with your libops site
 
-Drupal version   : 9.5.8
-Site URI         : http://default
-DB driver        : mysql
-DB hostname      : mariadb
-DB port          :
-DB username      : development
-DB name          : drupal
-Database         : Connected
-Drupal bootstrap : Successful
-Default theme    : libops_www
-Admin theme      : claro
-PHP binary       : /usr/local/bin/php
-PHP OS           : Linux
-PHP version      : 8.1.17
-Drush script     : /code/vendor/bin/drush
-Drush version    : 11.5.1
-Drush temp       : /tmp
-Drush configs    : /code/vendor/drush/drush/drush.yml
-Install profile  : standard
-Drupal root      : /code/web
-Site path        : sites/default
-Files, Public    : sites/default/files
-Files, Private   : /private
-Files, Temp      : /tmp
+Usage:
+  libops [command]
+
+Available Commands:
+  backup      Backup your libops environment
+  completion  Generate the autocompletion script for the specified shell
+  drush       Run drush commands on your libops environment
+  help        Help about any command
+  sync-db     Transfer the database from one environment to another
+
+Flags:
+  -e, --environment string   LibOps environment (default "development")
+  -h, --help                 help for libops
+  -p, --site string          LibOps project/site (default "homebrew-cli")
+  -v, --version              version for libops
+
+Use "libops [command] --help" for more information about a command.
 ```

@@ -7,7 +7,6 @@ import (
 	"log"
 	"strings"
 
-	"github.com/libops/cli/pkg/gcloud"
 	"github.com/libops/cli/pkg/libops"
 	"github.com/spf13/cobra"
 )
@@ -39,12 +38,7 @@ Info:
 		}
 
 		// get the gcloud id token
-		token, err := gcloud.AccessToken()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = libops.IssueCommand(site, env, "wakeup", "", token)
+		token, err := libops.GetToken(cmd, "token")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -60,4 +54,6 @@ Info:
 
 func init() {
 	rootCmd.AddCommand(drushCmd)
+
+	drushCmd.Flags().StringP("token", "t", "", "(optional/machines-only) The gcloud identity token to access your LibOps environment")
 }
