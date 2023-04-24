@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"time"
 
@@ -31,7 +32,7 @@ func IssueCommand(site, env, cmd, args, token string) error {
 		return err
 	}
 
-	fmt.Printf("Running `%s %s` on %s %s\n", cmd, args, site, env)
+	log.Printf("Running `%s %s` on %s %s\n", cmd, args, site, env)
 	url := fmt.Sprintf("https://%s.remote.%s.libops.site/%s", env, site, cmd)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(args)))
 	if err != nil {
@@ -94,45 +95,41 @@ func WakeEnvironment(site, env, token string) error {
 }
 
 func WaitUntilOnline(site, env, token string) error {
-	url := fmt.Sprintf("https://%s.drupal.%s.libops.site/", env, site)
+	var err error
+	wakeup := true
+	timeout := 1 * time.Minute
+	url := fmt.Sprintf("https://%s.remote.%s.libops.site/ping/", env, site)
 	client := http.Client{
 		Timeout: 3 * time.Second,
 	}
-	var resp *http.Response
-	var err error
-
-	wakeup := true
-
-	timeout := 5 * time.Minute
-	deadline := time.Now().Add(timeout)
-	for {
-		select {
-		case <-time.After(time.Until(deadline)):
-			fmt.Println("Timeout exceeded")
-			return fmt.Errorf("%s %s not ready after five minutes", site, env)
-		default:
-			resp, err = client.Get(url)
-			if err != nil {
-				if wakeup {
-					err = WakeEnvironment(site, env, token)
-					if err != nil {
-						fmt.Println("Trouble turning on machine.")
-						fmt.Println(err)
-					} else {
-						wakeup = false
-					}
-				}
-				fmt.Println(err)
-				fmt.Println("Waiting 10 seconds before trying again.")
-				time.Sleep(10 * time.Second)
-				continue
-			}
-			if resp.StatusCode == http.StatusOK {
-				fmt.Println(resp.Status)
-				return nil
-			}
-			fmt.Printf("Received status code %d, retrying...\n", resp.StatusCode)
-			time.Sleep(5 * time.Second) // wait 5 seconds before retrying
-		}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
 	}
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	for start := time.Now(); time.Since(start) < timeout; time.Sleep(5 * time.Second) {
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Println(err)
+			if wakeup {
+				log.Println("Failed to connect, making sure the machine is turned on.")
+				err = WakeEnvironment(site, env, token)
+				if err != nil {
+					log.Println("Trouble turning on machine.")
+					log.Println(err)
+				} else {
+					wakeup = false
+				}
+			}
+			log.Println("Waiting 10 seconds before trying again.")
+			time.Sleep(10 * time.Second)
+			continue
+		}
+		if resp.StatusCode == http.StatusOK {
+			return nil
+		}
+		log.Printf("Received status code %d, retrying...\n", resp.StatusCode)
+	}
+	log.Println("Timeout exceeded")
+	return fmt.Errorf("%s %s not ready after one minute", site, env)
 }
