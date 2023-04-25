@@ -39,7 +39,6 @@ Info:
 		// get the gcloud id token
 		token, err := libops.GetToken(cmd, "token")
 		if err != nil {
-			log.Println("Unable to run `gcloud auth print-identity-token`. Ensure you've ran `gcloud auth login`.")
 			log.Fatal(err)
 		}
 

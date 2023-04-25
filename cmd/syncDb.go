@@ -44,12 +44,10 @@ Info:
 
 		sourceToken, err := libops.GetToken(cmd, "source-token")
 		if err != nil {
-			log.Println("Unable to run `gcloud auth print-identity-token`. Ensure you've ran `gcloud auth login`.")
 			log.Fatal(err)
 		}
 		targetToken, err := libops.GetToken(cmd, "target-token")
 		if err != nil {
-			log.Println("Unable to run `gcloud auth print-identity-token`. Ensure you've ran `gcloud auth login`.")
 			log.Fatal(err)
 		}
 

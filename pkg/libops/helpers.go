@@ -26,7 +26,6 @@ func LoadEnvironment(cmd *cobra.Command) (string, string, error) {
 	// Perform a DNS lookup on the remote domain to ensure we have sane values
 	domain := fmt.Sprintf("%s.remote.%s.libops.site", env, site)
 	if _, err := net.LookupHost(domain); err != nil {
-		fmt.Println("Error:", err.Error())
 		return "", "", fmt.Errorf("Domain %s does not exist. Are site and environment valid?", domain)
 	}
 
@@ -80,6 +79,7 @@ func GetToken(cmd *cobra.Command, tokenArg string) (string, error) {
 	if token == "" {
 		token, err = gcloud.AccessToken()
 		if err != nil {
+			log.Println("Unable to run `gcloud auth print-identity-token`. Ensure you've ran `gcloud auth login`.")
 			return "", err
 		}
 	}
