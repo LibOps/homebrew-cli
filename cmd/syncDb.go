@@ -29,25 +29,28 @@ Info:
 
 		site, _, err := libops.LoadEnvironment(cmd)
 		if err != nil {
+			log.Println("Unable to load environment.")
 			log.Fatal(err)
 		}
 
 		source, err := cmd.Flags().GetString("source")
 		if err != nil {
-			return
+			log.Fatal(err)
 		}
 		target, err := cmd.Flags().GetString("target")
 		if err != nil {
-			return
+			log.Fatal(err)
 		}
 
 		sourceToken, err := libops.GetToken(cmd, "source-token")
 		if err != nil {
-			return
+			log.Println("Unable to run `gcloud auth print-identity-token`. Ensure you've ran `gcloud auth login`.")
+			log.Fatal(err)
 		}
 		targetToken, err := libops.GetToken(cmd, "target-token")
 		if err != nil {
-			return
+			log.Println("Unable to run `gcloud auth print-identity-token`. Ensure you've ran `gcloud auth login`.")
+			log.Fatal(err)
 		}
 
 		// run the drush command

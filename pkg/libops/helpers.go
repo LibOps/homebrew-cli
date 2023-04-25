@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
 	"time"
 
@@ -20,6 +21,13 @@ func LoadEnvironment(cmd *cobra.Command) (string, string, error) {
 	env, err := cmd.Flags().GetString("environment")
 	if err != nil {
 		return site, "", err
+	}
+
+	// Perform a DNS lookup on the remote domain to ensure we have sane values
+	domain := fmt.Sprintf("%s.remote.%s.libops.site", env, site)
+	if _, err := net.LookupHost(domain); err != nil {
+		fmt.Println("Error:", err.Error())
+		return "", "", fmt.Errorf("Domain %s does not exist. Are site and environment valid?", domain)
 	}
 
 	return site, env, nil
@@ -97,7 +105,7 @@ func WakeEnvironment(site, env, token string) error {
 func WaitUntilOnline(site, env, token string) error {
 	var err error
 	wakeup := true
-	timeout := 1 * time.Minute
+	timeout := 3 * time.Minute
 	url := fmt.Sprintf("https://%s.remote.%s.libops.site/ping/", env, site)
 	client := http.Client{
 		Timeout: 3 * time.Second,
