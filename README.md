@@ -26,7 +26,7 @@ After installation, the utility must be ran from within the locally checked out 
 ```
 $ git clone git@github.com:libops/your-site-repo
 $ cd your-site-repo
-$  libops --help                       
+$ libops --help                       
 Interact with your libops site
 
 Usage:
@@ -35,6 +35,7 @@ Usage:
 Available Commands:
   backup      Backup your libops environment
   completion  Generate the autocompletion script for the specified shell
+  config-ssh  Populate ~/.ssh/config with LibOps development environment
   drush       Run drush commands on your libops environment
   help        Help about any command
   sync-db     Transfer the database from one environment to another
