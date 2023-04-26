@@ -19,6 +19,28 @@ Instead of homebrew, you can download a binary for your system from [the latest 
 
 Then put the binary in a directory that is in your `$PATH`
 
+## Update
+
+### Homebrew
+
+```
+brew update && brew upgrade libops
+```
+
+### Download Binary
+
+Requires `curl`, `tar`, `jq`
+
+```
+# update for your architecture
+ARCH="homebrew-cli_Linux_x86_64.tar.gz"
+curl -s https://api.github.com/repos/LibOps/homebrew-cli/releases/latest > latest.json
+URL=$(jq -rc '.assets[] | select(.name == "'$ARCH'") | .browser_download_url' latest.json)
+echo "Fetching latest libops CLI release from $URL"
+curl -Ls -o $ARCH "$URL"
+tar -zxvf $ARCH
+mv libops /usr/local/bin/
+```
 ## Usage
 
 After installation, the utility must be ran from within the locally checked out repository that contains your site's source code
