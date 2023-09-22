@@ -106,7 +106,7 @@ func WaitUntilOnline(site, env, token string) error {
 	var err error
 	wakeup := true
 	timeout := 3 * time.Minute
-	url := fmt.Sprintf("https://%s.remote.%s.libops.site/ping/", env, site)
+	url := fmt.Sprintf("https://%s.drupal.%s.libops.site/ping/", env, site)
 	client := http.Client{
 		Timeout: 3 * time.Second,
 	}
