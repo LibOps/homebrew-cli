@@ -113,12 +113,12 @@ var configSshCmd = &cobra.Command{
 # here until the comment that contains the string "End LibOps Section".
 #
 # You should not hand-edit this section, unless you are deleting it.`,
-			"Host development.libops.site",
+			fmt.Sprintf("Host development.%s.site", site),
 			fmt.Sprintf("\tHostname %s", ip),
 			"\tUser coder",
 			"\tCheckHostIP=no",
 			fmt.Sprintf("\tHostKeyAlias=compute.%d", vm.Id),
-			"\n# End LibOps Section\n",
+			"\n# End LibOps Section",
 		}
 
 		newBlock := []byte(strings.Join(config, "\n"))
