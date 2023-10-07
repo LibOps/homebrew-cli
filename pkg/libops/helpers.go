@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"net"
 	"net/http"
 	"time"
 
@@ -23,12 +22,6 @@ func LoadEnvironment(cmd *cobra.Command) (string, string, error) {
 		return site, "", err
 	}
 
-	// Perform a DNS lookup on the remote domain to ensure we have sane values
-	domain := fmt.Sprintf("%s.remote.%s.libops.site", env, site)
-	if _, err := net.LookupHost(domain); err != nil {
-		return "", "", fmt.Errorf("Domain %s does not exist. Are site and environment valid?", domain)
-	}
-
 	return site, env, nil
 }
 
@@ -40,8 +33,11 @@ func IssueCommand(site, env, cmd, args, token string) error {
 	}
 
 	log.Printf("Running `%s %s` on %s %s\n", cmd, args, site, env)
-	url := fmt.Sprintf("https://%s.remote.%s.libops.site/%s", env, site, cmd)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(args)))
+	url, err := gcloud.GetCloudRunUrl(site, env)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", url, cmd), bytes.NewBuffer([]byte(args)))
 	if err != nil {
 		return err
 	}
@@ -88,8 +84,11 @@ func GetToken(cmd *cobra.Command, tokenArg string) (string, error) {
 }
 
 func WakeEnvironment(site, env, token string) error {
-	url := fmt.Sprintf("https://%s.remote.%s.libops.site/wakeup", env, site)
-	req, err := http.NewRequest("POST", url, nil)
+	url, err := gcloud.GetCloudRunUrl(site, env)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/wakeup", url), nil)
 	if err != nil {
 		return err
 	}
@@ -106,11 +105,14 @@ func WaitUntilOnline(site, env, token string) error {
 	var err error
 	wakeup := true
 	timeout := 3 * time.Minute
-	url := fmt.Sprintf("https://%s.remote.%s.libops.site/ping/", env, site)
+	url, err := gcloud.GetCloudRunUrl(site, env)
+	if err != nil {
+		return err
+	}
 	client := http.Client{
 		Timeout: 3 * time.Second,
 	}
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/ping/", url), nil)
 	if err != nil {
 		return err
 	}
