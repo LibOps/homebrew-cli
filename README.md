@@ -40,6 +40,7 @@ Available Commands:
   completion  Generate the autocompletion script for the specified shell
   config-ssh  Populate ~/.ssh/config with LibOps development environment
   drush       Run drush commands on your libops environment
+  get         Display one or many resources.
   help        Help about any command
   sync-db     Transfer the database from one environment to another
 
