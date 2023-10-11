@@ -13,7 +13,9 @@ import (
 
 func GetCloudRunUrl(p, env string) (string, error) {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
+		if err = os.Setenv("LIBOPS_REGION", "us-central1"); err != nil {
+                    log.Fatal("Error loading .env file")
+                }
 	}
 	region := os.Getenv("LIBOPS_REGION")
 
