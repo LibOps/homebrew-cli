@@ -5,20 +5,20 @@
 class Libops < Formula
   desc ""
   homepage "https://github.com/libops/homebrew-cli"
-  version "0.2.2"
+  version "0.2.3"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.2.2/homebrew-cli_Darwin_arm64.tar.gz"
-      sha256 "b47b44de668a65b71f04a9c206d346e2776b7f3f309dc2ed0966f64010d94e58"
+      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.2.3/homebrew-cli_Darwin_arm64.tar.gz"
+      sha256 "2218ee655dbdce8f57c6bee0d26f29e73bf714cc5d4771994be98794da687d0c"
 
       def install
         bin.install "libops"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.2.2/homebrew-cli_Darwin_x86_64.tar.gz"
-      sha256 "7e932add430cf5ce5b888354cbd9362c7a49874db94d6a79e02120f6c3a4de51"
+      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.2.3/homebrew-cli_Darwin_x86_64.tar.gz"
+      sha256 "9bcaac7e9ee6e9d5ed30f498af9e910d1a2a0d1da3a5b1f1d2f2570750c331de"
 
       def install
         bin.install "libops"
@@ -28,16 +28,16 @@ class Libops < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.2.2/homebrew-cli_Linux_arm64.tar.gz"
-      sha256 "36c20d4a47183f08e750e8991bf8a85dccc854aa1419f2a6af8f5bb338f853e8"
+      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.2.3/homebrew-cli_Linux_arm64.tar.gz"
+      sha256 "14dd7b4b0d27fa139f54e6651d954cffe02dfb102309e401b89114e06fe44916"
 
       def install
         bin.install "libops"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.2.2/homebrew-cli_Linux_x86_64.tar.gz"
-      sha256 "67e8ee58a40f8a4aa52c076908dd9cb199ddbff7736694d3c49ed36c84876c12"
+      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.2.3/homebrew-cli_Linux_x86_64.tar.gz"
+      sha256 "dbe364e343663413d6fa3ac1ce60db31bff2d02b4f0fb4978eb7908902e12f32"
 
       def install
         bin.install "libops"
