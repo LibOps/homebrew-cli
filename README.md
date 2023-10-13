@@ -42,12 +42,13 @@ Available Commands:
   drush       Run drush commands on your libops environment
   get         Display information about your LibOps environment.
   help        Help about any command
+  import      Import resources to your LibOps environment.
   sync-db     Transfer the database from one environment to another
 
 Flags:
   -e, --environment string   LibOps environment (default "development")
   -h, --help                 help for libops
-  -p, --site string          LibOps project/site (default "your-site-repo")
+  -p, --site string          LibOps project/site (default "homebrew-cli")
   -v, --version              version for libops
 
 Use "libops [command] --help" for more information about a command.
