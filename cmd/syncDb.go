@@ -55,6 +55,8 @@ Info:
 		exportArgs := []string{
 			"sql-dump",
 			"-y",
+			"--skip-tables-list=cache,cache_*,watchdog",
+			"--structure-tables-list=cache,cache_*,watchdog",
 			"--result-file=/tmp/drupal.sql",
 			"--debug",
 		}
