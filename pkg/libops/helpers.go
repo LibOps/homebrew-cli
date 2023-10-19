@@ -135,10 +135,6 @@ func WaitUntilOnline(site, env, token string) error {
 			time.Sleep(10 * time.Second)
 			continue
 		}
-		if resp.StatusCode == http.StatusOK {
-			return nil
-		}
-		log.Printf("Received status code %d, retrying...\n", resp.StatusCode)
 	}
 	log.Println("Timeout exceeded")
 	return fmt.Errorf("%s %s not ready after one minute", site, env)
