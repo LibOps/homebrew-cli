@@ -135,6 +135,7 @@ func WaitUntilOnline(site, env, token string) error {
 			time.Sleep(10 * time.Second)
 			continue
 		}
+		return nil
 	}
 	log.Println("Timeout exceeded")
 	return fmt.Errorf("%s %s not ready after one minute", site, env)
