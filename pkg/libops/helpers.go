@@ -118,7 +118,7 @@ func WaitUntilOnline(site, env, token string) error {
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	for start := time.Now(); time.Since(start) < timeout; time.Sleep(5 * time.Second) {
-		resp, err := client.Do(req)
+		_, err := client.Do(req)
 		if err != nil {
 			log.Println(err)
 			if wakeup {
