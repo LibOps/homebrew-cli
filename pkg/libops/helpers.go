@@ -118,7 +118,7 @@ func WaitUntilOnline(site, env, token string) error {
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	for start := time.Now(); time.Since(start) < timeout; time.Sleep(5 * time.Second) {
-		_, err := client.Do(req)
+		resp, err := client.Do(req)
 		if err != nil {
 			log.Println(err)
 			if wakeup {
@@ -135,7 +135,10 @@ func WaitUntilOnline(site, env, token string) error {
 			time.Sleep(10 * time.Second)
 			continue
 		}
-		return nil
+		if resp.StatusCode == http.StatusOK {
+			return nil
+		}
+		log.Printf("Received status code %d, retrying...\n", resp.StatusCode)
 	}
 	log.Println("Timeout exceeded")
 	return fmt.Errorf("%s %s not ready after one minute", site, env)
