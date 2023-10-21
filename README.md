@@ -43,12 +43,13 @@ Available Commands:
   get         Display information about your LibOps environment.
   help        Help about any command
   import      Import resources to your LibOps environment.
+  sequelace   Connect to your LibOps database using Sequel Ace (Mac OS only)
   sync-db     Transfer the database from one environment to another
 
 Flags:
   -e, --environment string   LibOps environment (default "development")
   -h, --help                 help for libops
-  -p, --site string          LibOps project/site (default "homebrew-cli")
+  -p, --site string          LibOps project/site (default "YOUR-LIBOPS-SITE")
   -v, --version              version for libops
 
 Use "libops [command] --help" for more information about a command.
