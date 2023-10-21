@@ -1,4 +1,4 @@
-module github.com/libops/cli
+module github.com/libops/homebrew-cli
 
 go 1.20
 

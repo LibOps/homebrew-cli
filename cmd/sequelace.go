@@ -11,8 +11,8 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/libops/cli/pkg/gcloud"
-	"github.com/libops/cli/pkg/libops"
+	"github.com/libops/homebrew-cli/pkg/gcloud"
+	"github.com/libops/homebrew-cli/pkg/libops"
 	"github.com/spf13/cobra"
 )
 
@@ -68,7 +68,6 @@ Info:
 		ci := libops.ConnectionInfo{}
 		json.NewDecoder(resp.Body).Decode(&ci)
 
-		// see if the client passed
 		sshKeyPath, err := cmd.Flags().GetString("ssh-priv-key")
 		if err != nil {
 			log.Fatal(err)

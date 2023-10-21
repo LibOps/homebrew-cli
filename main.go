@@ -3,7 +3,7 @@ Copyright © 2023 Joe Corall <joe@libops.io>
 */
 package main
 
-import "github.com/libops/cli/cmd"
+import "github.com/libops/homebrew-cli/cmd"
 
 var (
 	version = "dev"

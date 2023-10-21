@@ -16,8 +16,8 @@ import (
 
 	compute "google.golang.org/api/compute/v1"
 
-	"github.com/libops/cli/pkg/gcloud"
-	"github.com/libops/cli/pkg/libops"
+	"github.com/libops/homebrew-cli/pkg/gcloud"
+	"github.com/libops/homebrew-cli/pkg/libops"
 	"github.com/spf13/cobra"
 )
 

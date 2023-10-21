@@ -12,8 +12,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/libops/cli/pkg/gcloud"
-	"github.com/libops/cli/pkg/libops"
+	"github.com/libops/homebrew-cli/pkg/gcloud"
+	"github.com/libops/homebrew-cli/pkg/libops"
 	"github.com/spf13/cobra"
 )
 
