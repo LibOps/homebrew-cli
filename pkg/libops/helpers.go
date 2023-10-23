@@ -94,6 +94,9 @@ func WakeEnvironment(site, env, token string) error {
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	resp, err := http.DefaultClient.Do(req)
+        if err != nil {
+                return err
+        }
 	if resp.StatusCode > 299 {
 		return fmt.Errorf("Environment not able to turn on. %s %s returned a non-200: %v", site, env, resp.StatusCode)
 	}
