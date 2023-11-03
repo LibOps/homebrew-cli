@@ -16,6 +16,7 @@ import (
 
 	compute "google.golang.org/api/compute/v1"
 
+	"github.com/libops/homebrew-cli/internal/helpers"
 	"github.com/libops/homebrew-cli/pkg/gcloud"
 	"github.com/libops/homebrew-cli/pkg/libops"
 	"github.com/spf13/cobra"
@@ -28,7 +29,7 @@ var configSshCmd = &cobra.Command{
 	Long: `Populate ~/.ssh/config with LibOps development environment
     This will make SFTP'ing to your development environment easier.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
+		var err error
 		site, env, err := libops.LoadEnvironment(cmd)
 		if err != nil {
 			log.Println("Unable to load environment.")
@@ -102,6 +103,7 @@ var configSshCmd = &cobra.Command{
 			json.NewDecoder(resp.Body).Decode(&vm)
 			ip = vm.NetworkInterfaces[0].AccessConfigs[0].NatIP
 		}
+		host := fmt.Sprintf("%s.%s.site", env, site)
 		config := []string{
 			`# LibOps Section
 #
@@ -116,18 +118,20 @@ var configSshCmd = &cobra.Command{
 # here until the comment that contains the string "End LibOps Section".
 #
 # You should not hand-edit this section, unless you are deleting it.`,
-			fmt.Sprintf("Host %s.%s.site", env, site),
+			fmt.Sprintf("Host %s", host),
 			fmt.Sprintf("\tHostname %s", ip),
 			"\tUser coder",
+			"\tPort 2222",
 			"\tCheckHostIP=no",
 			fmt.Sprintf("\tHostKeyAlias=compute.%d", vm.Id),
-			"\n# End LibOps Section",
 		}
-
+		closer := []byte("\n\n# End LibOps Section\n")
 		newBlock := []byte(strings.Join(config, "\n"))
 		if match == nil {
+			c := append(fileBytes, newBlock...)
+			c = append(c, closer...)
 			// If the block of text doesn't exist, append it to the end of the file
-			err := os.WriteFile(configSsh, append(fileBytes, newBlock...), 0644)
+			err = os.WriteFile(configSsh, c, 0644)
 			if err != nil {
 				log.Printf("Failed to update %s", configSsh)
 				fmt.Println(err)
@@ -138,14 +142,30 @@ var configSshCmd = &cobra.Command{
 				newBlock = nil
 			}
 
+			existingBlocks, err := helpers.FindHostBlocks(fileBytes, host)
+			if err != nil {
+				log.Printf("Failed to update %s", configSsh)
+				log.Fatal(err)
+			}
 			newFileBytes := append(fileBytes[:match[0]], append(newBlock, fileBytes[match[1]:]...)...)
+			if !remove {
+				for _, h := range existingBlocks {
+					h = fmt.Sprintf("\n%s\n", h)
+					newFileBytes = append(newFileBytes, []byte(h)...)
+				}
+				newFileBytes = append(newFileBytes, closer...)
+			}
 			err = os.WriteFile(configSsh, newFileBytes, 0644)
 			if err != nil {
 				log.Printf("Failed to update %s", configSsh)
 				log.Fatal(err)
 			}
 		}
+
 		log.Printf("Updated %s\n", configSsh)
+		if !remove {
+			log.Printf("ssh %s\n", host)
+		}
 	},
 }
 
