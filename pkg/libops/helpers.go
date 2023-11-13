@@ -83,30 +83,8 @@ func GetToken(cmd *cobra.Command, tokenArg string) (string, error) {
 	return token, nil
 }
 
-func WakeEnvironment(site, env, token string) error {
-	url, err := gcloud.GetCloudRunUrl(site, env)
-	if err != nil {
-		return err
-	}
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/wakeup", url), nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
-	resp, err := http.DefaultClient.Do(req)
-        if err != nil {
-                return err
-        }
-	if resp.StatusCode > 299 {
-		return fmt.Errorf("Environment not able to turn on. %s %s returned a non-200: %v", site, env, resp.StatusCode)
-	}
-
-	return nil
-}
-
 func WaitUntilOnline(site, env, token string) error {
 	var err error
-	wakeup := true
 	timeout := 3 * time.Minute
 	url, err := gcloud.GetCloudRunUrl(site, env)
 	if err != nil {
@@ -124,16 +102,6 @@ func WaitUntilOnline(site, env, token string) error {
 		resp, err := client.Do(req)
 		if err != nil {
 			log.Println(err)
-			if wakeup {
-				log.Println("Failed to connect, making sure the machine is turned on.")
-				err = WakeEnvironment(site, env, token)
-				if err != nil {
-					log.Println("Trouble turning on machine.")
-					log.Println(err)
-				} else {
-					wakeup = false
-				}
-			}
 			log.Println("Waiting 10 seconds before trying again.")
 			time.Sleep(10 * time.Second)
 			continue
