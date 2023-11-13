@@ -5,20 +5,20 @@
 class Libops < Formula
   desc ""
   homepage "https://github.com/libops/homebrew-cli"
-  version "0.4.4"
+  version "0.4.7"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.4.4/homebrew-cli_Darwin_x86_64.tar.gz"
-      sha256 "6f35cc0529f1f28b242cecb782bcdd008456496c9e87ca9df2e7b179f35b55cc"
+      url "https://github.com/LibOps/homebrew-cli/releases/download/0.4.7/homebrew-cli_Darwin_x86_64.tar.gz"
+      sha256 "b420bc5aaa43552c9835b0eaaed9ff4260951b6f0aaa240e893934dbe1f3f6f0"
 
       def install
         bin.install "libops"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.4.4/homebrew-cli_Darwin_arm64.tar.gz"
-      sha256 "c13ec74ce67a78ac6cb10292ea982293ec3c87ef68c736bd9a36a7e3f1e745eb"
+      url "https://github.com/LibOps/homebrew-cli/releases/download/0.4.7/homebrew-cli_Darwin_arm64.tar.gz"
+      sha256 "806de2ec9f8c3c5f26bd790773f862c72fd5d196ce3017098fec652c72bdfc99"
 
       def install
         bin.install "libops"
@@ -27,17 +27,17 @@ class Libops < Formula
   end
 
   on_linux do
-    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.4.4/homebrew-cli_Linux_arm64.tar.gz"
-      sha256 "aa08e1767cfb0a5c88307fb9f5c9cef82cffe8c5509507779525535bdc5d4517"
+    if Hardware::CPU.intel?
+      url "https://github.com/LibOps/homebrew-cli/releases/download/0.4.7/homebrew-cli_Linux_x86_64.tar.gz"
+      sha256 "b1faaa3dd8c85600fe0869c5dcab3184a7bd060e49a74a8b462cb2aefd2c3467"
 
       def install
         bin.install "libops"
       end
     end
-    if Hardware::CPU.intel?
-      url "https://github.com/LibOps/homebrew-cli/releases/download/v0.4.4/homebrew-cli_Linux_x86_64.tar.gz"
-      sha256 "183c586e569c1f7e3f7b9f87094bd6b5d2ba17fc1c41af429e8993a39a60bf37"
+    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
+      url "https://github.com/LibOps/homebrew-cli/releases/download/0.4.7/homebrew-cli_Linux_arm64.tar.gz"
+      sha256 "6e855b5e2f5395423779fdaa3e8bca5e8da4158df4d5cb7554b1ad42b8a62a46"
 
       def install
         bin.install "libops"
