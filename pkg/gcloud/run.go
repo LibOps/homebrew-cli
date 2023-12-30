@@ -18,6 +18,10 @@ func GetCloudRunUrl(p, env string) (string, error) {
                 }
 	}
 	region := os.Getenv("LIBOPS_REGION")
+	if region == "" {
+		region = "us-central1"
+	}
+	
 
 	args := []string{
 		"run",
@@ -34,7 +38,7 @@ func GetCloudRunUrl(p, env string) (string, error) {
 
 	err := cmd.Run()
 	if err != nil {
-		log.Println("Failed to location remote service")
+		log.Println("Failed to locate remote service")
 		return "", err
 	}
 
